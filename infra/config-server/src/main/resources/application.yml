@@ -1,0 +1,26 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations:
+            - classpath:config/gateway/{application}
+            - classpath:config/stat/{application}
+            - classpath:config/infra/{application}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

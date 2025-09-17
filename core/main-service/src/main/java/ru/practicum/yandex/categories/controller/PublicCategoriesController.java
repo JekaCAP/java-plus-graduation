@@ -1,0 +1,28 @@
+package ru.practicum.yandex.categories.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.yandex.categories.dto.CategoryDto;
+import ru.practicum.yandex.categories.service.CategoriesService;
+
+import java.util.List;
+
+@Validated
+@RequestMapping("/categories")
+@RequiredArgsConstructor
+@RestController
+public class PublicCategoriesController {
+    private final CategoriesService service;
+
+    @GetMapping
+    public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
+                                           @RequestParam(defaultValue = "10") Integer size) {
+        return service.findBy(from, size);
+    }
+
+    @GetMapping("/{catId}")
+    public CategoryDto getCategoryBy(@PathVariable Long catId) {
+        return service.findBy(catId);
+    }
+}
