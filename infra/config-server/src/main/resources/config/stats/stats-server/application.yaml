@@ -1,27 +1,23 @@
-server:
-  port: 0
-  uri: "http://localhost:${server.port}"
-
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6544/explore-stats
-    username: explore-stats
-    password: explore-stats
-
+    url: jdbc:postgresql://localhost:6542/statsdb
+    username: statsuser
+    password: statspass
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
-        jdbc.time_zone: UTC
-
+    show-sql: false
   sql:
     init:
       mode: always
 
-main:
-  banner-mode: off
-  log-startup-info: false
+logging:
+  level:
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+    org.springframework.transaction.interceptor: TRACE
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG

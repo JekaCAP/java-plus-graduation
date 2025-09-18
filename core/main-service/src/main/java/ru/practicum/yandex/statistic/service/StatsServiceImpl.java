@@ -1,25 +1,25 @@
 package ru.practicum.yandex.statistic.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.client.StatClient;
+import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.stat.dto.EndpointHit;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class StatServiceImpl implements StatService {
+public class StatsServiceImpl implements StatsService {
     private static final String APP_NAME = "ewm";
-    private final StatClient statClient;
+    private final StatsClient statsClient;
     private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void createStats(String uri, String ip) {
-        log.info("Creat stats for URI: {}, IP: {}", uri, ip);
+        log.info("Create stats for URI: {}, IP: {}", uri, ip);
         EndpointHit hitDto = EndpointHit.builder()
                 .uri(uri)
                 .ip(ip)
@@ -27,6 +27,6 @@ public class StatServiceImpl implements StatService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        statClient.hit(hitDto);
+        statsClient.hit(hitDto);
     }
 }
