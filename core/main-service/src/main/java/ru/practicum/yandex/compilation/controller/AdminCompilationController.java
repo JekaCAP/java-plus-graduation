@@ -41,6 +41,4 @@ public class AdminCompilationController {
                                             @RequestBody @Valid UpdateCompilationRequest request) throws BadRequestException {
         return compilationService.update(id, request);
     }
-
-
 }

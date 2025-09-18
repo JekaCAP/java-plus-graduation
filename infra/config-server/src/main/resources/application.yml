@@ -15,7 +15,7 @@ spring:
         native:
           searchLocations:
             - classpath:config/gateway/{application}
-            - classpath:config/stat/{application}
+            - classpath:config/stats/{application}
             - classpath:config/infra/{application}
 
 eureka:

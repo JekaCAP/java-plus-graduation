@@ -9,16 +9,16 @@ spring:
         enabled: true
         serviceId: config-server
       fail-fast: true
-      retry:
-        useRandomPolicy: true
-        max-interval: 6000
+
+server:
+  port: 8080
 
 eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
   instance:
     preferIpAddress: true
     hostname: localhost
-    instanceId: "${spring.application.name}:${server.port}"
-  client:
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+    instanceId: "gateway-server:8080"
+    leaseRenewalIntervalInSeconds: 10

@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
@@ -37,6 +38,6 @@ public class ErrorHandler {
                 HttpStatus.BAD_REQUEST,
                 "Incorrectly made request.",
                 e.getMessage(),
-                e.getStackTrace().toString());
+                Arrays.toString(e.getStackTrace()));
     }
 }
