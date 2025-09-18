@@ -1,25 +1,24 @@
 package ru.practicum.yandex.compilation.dto;
 
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.Nullable;
-
-@Data
-@Builder
+@Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateCompilationRequest {
-    @Nullable
-    private List<Long> events;
-    @Nullable
-    private Boolean pinned;
-    @Nullable
-    @Length(min = 1, max = 50)
-    private String title;
-}
 
+    @Size(max = 50)
+    String title;
+
+    List<Long> events;
+
+    Boolean pinned;
+}

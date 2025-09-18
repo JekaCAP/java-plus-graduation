@@ -1,83 +1,32 @@
 package ru.practicum.yandex.comment.controller;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.yandex.comment.dto.CommentDto;
-import ru.practicum.yandex.comment.dto.CommentDtoPublic;
 import ru.practicum.yandex.comment.service.CommentService;
+import ru.practicum.yandex.exception.NotFoundException;
 
-import java.util.List;
+import java.util.Collection;
 
-@RestController
-@Validated
-@Slf4j
 @RequiredArgsConstructor
+@RestController
+@RequestMapping("/events/{event-id}/comments")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentService service;
 
-
-    @PostMapping("/users/{userId}/events/{eventId}/comments")
-    public ResponseEntity<CommentDto> addCommentToEvent(@PathVariable("userId") long authorId,
-                                                        @PathVariable("eventId") long eventId,
-                                                        @Valid @RequestBody CommentDto commentDto) {
-        log.info("Call addCommentToEvent with authorId={}, eventId={}", authorId, eventId);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.addCommentToEvent(authorId, eventId, commentDto));
-    }
-
-    @GetMapping("/users/{userId}/comments/{commentId}")
-    public ResponseEntity<CommentDto> getCommentByUser(@PathVariable("userId") long authorId,
-                                                       @PathVariable("commentId") long commentId) {
-        log.info("Call getCommentByUser with authorId = {} and commentId = {}", authorId, commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentByUser(authorId, commentId));
-    }
-
-    @GetMapping("user/events/{eventId}/comments")
-    public ResponseEntity<List<CommentDto>> getAllCommentsByEvent(@PathVariable("eventId") long eventId) {
-        log.info("Call getAllCommentsByEvent eventId = {}", eventId);
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsByEvent(eventId));
-    }
-
-    @PatchMapping("/users/{userId}/comments/{commentId}")
-    public ResponseEntity<CommentDto> updateCommentByUser(@PathVariable("userId") long authorId,
-                                                          @PathVariable("commentId") long commentId,
-                                                          @Valid @RequestBody CommentDto commentDto) {
-        log.info("Call updateCommentByUser authorId = {} commentId = {}", authorId, commentId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.updateCommentByUser(authorId, commentId, commentDto));
-    }
-
-    @DeleteMapping("/users/{userId}/comments/{commentId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommentByUser(@PathVariable("userId") long authorId,
-                                    @PathVariable("commentId") long commentId) {
-        log.info("Call deleteCommentByUser userId = {}; commentId  = {}", commentId, authorId);
-        commentService.deleteCommentByUser(authorId, commentId);
-    }
-
-    @PatchMapping("admin/comments/{commentId}")
-    public ResponseEntity<CommentDto> updateCommentByAdmin(@PathVariable("commentId") long commentId,
-                                                           @Valid @RequestBody CommentDto commentDto) {
-        log.info("Call updateCommentByAdmin with commentId = {}.", commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.updateCommentByAdmin(commentId, commentDto));
-    }
-
-    @DeleteMapping("admin/comments/{commentId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommentByAdmin(@PathVariable("commentId") long commentId) {
-        log.info("Call deleteCommentByAdmin with commentId = {}.", commentId);
-        commentService.deleteCommentByAdmin(commentId);
-    }
-
-    @GetMapping("events/{eventId}/comments")
-    public ResponseEntity<List<CommentDtoPublic>> getAllCommentsByEventPublic(@PathVariable("eventId") long eventId) {
-        log.info("Call getAllCommentsByEventPublic with eventId = {}.", eventId);
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsByEventPublic(eventId));
+    @GetMapping
+    public Collection<CommentDto> getByEvent(
+            @PathVariable(name = "event-id") Long eventId,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size) throws NotFoundException {
+        return service.getAllEventComments(eventId, from, size);
     }
 }
+

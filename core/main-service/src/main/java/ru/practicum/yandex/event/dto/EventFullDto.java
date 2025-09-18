@@ -1,40 +1,56 @@
 package ru.practicum.yandex.event.dto;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.practicum.yandex.categories.dto.CategoryDto;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.yandex.category.dto.CategoryDto;
 import ru.practicum.yandex.event.model.EventState;
 import ru.practicum.yandex.event.model.Location;
-import ru.practicum.yandex.user.dto.UserShortDto;
+import ru.practicum.yandex.user.dto.UserDto;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
-    private String annotation;
-    private CategoryDto category;
-    private Integer confirmedRequests;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdOn;
-    private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate;
-    private Long id;
-    private UserShortDto initiator;
-    private Location location;
-    private boolean paid;
-    private Integer participantLimit = 0;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn;
-    private boolean requestModeration = true;
-    private EventState state;
-    private String title;
-    private Integer views;
-}
 
+    Long id;
+
+    @Size(min = 1, max = 128)
+    String title;
+
+    @Size(min = 1, max = 1024)
+    String annotation;
+
+    CategoryDto category;
+
+    Boolean paid;
+
+    String eventDate;
+
+    UserDto initiator;
+
+    @Size(min = 1, max = 1024)
+    String description;
+
+    Integer participantLimit;
+
+    EventState state;
+
+    String createdOn;
+
+    Location location;
+
+    Boolean requestModeration;
+
+    Long confirmedRequests;
+
+    String publishedOn;
+
+    Integer views;
+}

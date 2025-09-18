@@ -1,18 +1,25 @@
 package ru.practicum.yandex.user.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.yandex.user.model.User;
 
-@Repository
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Page<User> findAllByIdIn(List<Long> ids, Pageable page);
+    User getUserById(Long id);
 
-    Optional<User> findByEmail(String email);
+    boolean existsByName(String name);
+
+    @Query("SELECT u FROM User u " +
+            "WHERE(u.id in :ids)")
+    List<User> findAllByIdsPageable(List<Long> ids, Pageable page);
+
+    @Query("SELECT u FROM User u")
+    List<User> findAllPageable(Pageable page);
+
+    @Query("SELECT u.id FROM User u")
+    List<Long> findAllId();
 }

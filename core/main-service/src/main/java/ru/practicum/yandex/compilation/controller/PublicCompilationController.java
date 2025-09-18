@@ -1,31 +1,38 @@
 package ru.practicum.yandex.compilation.controller;
 
-import java.util.List;
-
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.yandex.compilation.dto.CompilationDto;
+import ru.practicum.yandex.compilation.dto.ResponseCompilationDto;
 import ru.practicum.yandex.compilation.service.CompilationService;
+import ru.practicum.yandex.exception.NotFoundException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/compilations")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PublicCompilationController {
-    private final CompilationService compilationService;
+
+    final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> getCompilations(@RequestParam(required = false, defaultValue = "false") Boolean pinned,
-                                                @RequestParam(required = false, defaultValue = "0") Integer from,
-                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
-        return compilationService.getAll(pinned, from, size);
+    public List<ResponseCompilationDto> getAll(@RequestParam(required = false) Boolean pinned,
+                                               @RequestParam(defaultValue = "0") Integer from,
+                                               @RequestParam(defaultValue = "10") Integer size) {
+        return compilationService.getCompilations(pinned, from, size);
     }
 
-    @GetMapping("/{id}")
-    public CompilationDto getCompilation(@PathVariable Long id) {
-        return compilationService.get(id);
+    @GetMapping("/{compilation-id}")
+    public ResponseCompilationDto getCompilationById(@PathVariable(name = "compilation-id") Long compilationId) throws NotFoundException {
+        return compilationService.getCompilationById(compilationId);
     }
+
+
 }

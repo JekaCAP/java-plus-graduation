@@ -1,26 +1,27 @@
 package ru.practicum.yandex.comment.service;
 
+
 import ru.practicum.yandex.comment.dto.CommentDto;
-import ru.practicum.yandex.comment.dto.CommentDtoPublic;
+import ru.practicum.yandex.comment.dto.GetCommentsAdminRequest;
+import ru.practicum.yandex.exception.ConflictException;
+import ru.practicum.yandex.exception.NotFoundException;
 
 import java.util.List;
 
 public interface CommentService {
 
-    CommentDto addCommentToEvent(Long authorId, Long eventId, CommentDto commentDto);
+    CommentDto addComment(CommentDto commentDto, Long userId, Long eventId) throws NotFoundException, ConflictException;
 
-    CommentDto getCommentByUser(Long authorId, Long commentId);
+    void delete(Long userId, Long commentId) throws NotFoundException, ConflictException;
 
-    List<CommentDto> getAllCommentsByEvent(Long eventId);
+    void delete(Long commentId) throws NotFoundException;
 
-    CommentDto updateCommentByUser(Long authorId, Long commentId, CommentDto commentDto);
+    CommentDto updateUserComment(Long userId, Long commentId, CommentDto commentDto) throws NotFoundException, ConflictException;
 
-    void deleteCommentByUser(Long authorId, Long commentId);
+    List<CommentDto> getAllUserComments(Long userId) throws NotFoundException;
 
+    List<CommentDto> getAllEventComments(GetCommentsAdminRequest param) throws NotFoundException;
 
-    CommentDto updateCommentByAdmin(Long commentId, CommentDto commentDto);
+    List<CommentDto> getAllEventComments(Long eventId, int from, int size) throws NotFoundException;
 
-    void deleteCommentByAdmin(Long commentId);
-
-    List<CommentDtoPublic> getAllCommentsByEventPublic(Long eventId);
 }

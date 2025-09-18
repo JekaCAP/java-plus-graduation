@@ -1,5 +1,15 @@
 package ru.practicum.yandex.event.model;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum EventState {
-    PENDING, PUBLISHED, CANCELED
+    PENDING,
+    PUBLISHED,
+    CANCELED;
+
+    public static List<String> getAll() {
+        return Arrays.stream(values()).map(EventState::name).collect(Collectors.toList());
+    }
 }

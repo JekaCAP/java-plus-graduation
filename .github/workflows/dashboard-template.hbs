@@ -1437,9 +1437,8 @@ function isXML(data)
     return (data.length > 0 && data[0] === '<');
 }
 
-// see https://gist.github.com/sente/1083506/d2834134cd070dbcc08bf42ee27dabb746a1c54d#gistcomment-2254622
 function formatXML(data) {
-    const PADDING = ' '.repeat(2); // set desired indent size here
+    const PADDING = ' '.repeat(2);
     const reg = /(>)(<)(\/*)/g;
     let pad = 0;
     xml = data.replace(reg, '$1\r\n$2$3');
@@ -1463,7 +1462,6 @@ function formatXML(data) {
 
 $(".prettyPrint").each(function () {
         var data = $(this).text();
-        // Verify whether data is JSON
         if(isJSON(data))
         {
                 obj = JSON.parse(data);
@@ -1571,7 +1569,6 @@ function topFunction() {
 
 window.onload = function () {
 
-  // set display for all blocks of response
   var allItems = document.querySelectorAll('[class*=iteration-]');
   allItems.forEach(function(elem){
     elem.style.display = 'block';
@@ -1592,7 +1589,6 @@ window.onload = function () {
     li.classList.add("itPassed");
 
     li.addEventListener('click', function() {
-      //set display to none for all except row
       let allItems = document.querySelectorAll('[class*=iteration-]:not(.row)');
       allItems.forEach(function(elem) {
         elem.style.display = 'none';
@@ -1613,7 +1609,6 @@ window.onload = function () {
     menu.appendChild(li);
   }
 
-  //shows first tab data
   document.getElementById('iteration-0').click();
   document.getElementById('iterationSelected').innerHTML = `Iteration ${document.getElementById('iteration-0').innerHTML} selected`
 

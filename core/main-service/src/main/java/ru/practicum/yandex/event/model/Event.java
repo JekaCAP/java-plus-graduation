@@ -1,85 +1,88 @@
 package ru.practicum.yandex.event.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.yandex.categories.model.Category;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.yandex.category.model.Category;
 import ru.practicum.yandex.compilation.model.Compilation;
-import ru.practicum.yandex.event.model.constraint.FutureAtLeastTwoHours;
 import ru.practicum.yandex.user.model.User;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "events")
 @Getter
 @Setter
-@Entity
-@Table(name = "event")
-@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column(nullable = false, length = 1024)
+    String annotation;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @Column(name = "created_on")
+    LocalDateTime createdOn;
 
-    @NotBlank
-    private String title;
-    private String annotation;
-    private String description;
+    @Column(length = 1024)
+    String description;
 
-    private int confirmedRequests;
-    private int participantLimit;
+    @Column(nullable = false, name = "event_date")
+    LocalDateTime eventDate;
 
-    @OneToMany(mappedBy = "event")
-    private List<EventView> views;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    User initiator;
 
-    private boolean requestModeration = true;
-    @NotNull
-    private Boolean paid;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    Location location;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdOn;
-    @FutureAtLeastTwoHours
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn;
+    @Column
+    Boolean paid;
+
+    @Column(name = "participant_limit")
+    Integer participantLimit;
+
+    @Column(name = "published_on")
+    LocalDateTime publishedOn;
+
+    @Column(name = "request_moderation")
+    Boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
-    private EventState state;
+    EventState state;
 
-    @ManyToMany(mappedBy = "events")
-    private List<Compilation> compilations = new ArrayList<>();
+    @Column(nullable = false)
+    String title;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "events_compilations",
+            joinColumns = @JoinColumn(name = "compilation"),
+            inverseJoinColumns = @JoinColumn(name = "event"))
+    List<Compilation> compilationList;
 }

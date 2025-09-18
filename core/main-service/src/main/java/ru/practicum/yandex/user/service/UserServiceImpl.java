@@ -1,78 +1,57 @@
 package ru.practicum.yandex.user.service;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.yandex.common.ConflictException;
-import ru.practicum.yandex.common.NotFoundException;
-import ru.practicum.yandex.common.PageableBuilder;
+import ru.practicum.yandex.exception.ConflictException;
+import ru.practicum.yandex.exception.NotFoundException;
 import ru.practicum.yandex.user.dto.UserDto;
-import ru.practicum.yandex.user.dto.UserRequestDto;
-import ru.practicum.yandex.user.mapper.UserMapper;
+import ru.practicum.yandex.user.dto.UserMapper;
 import ru.practicum.yandex.user.model.User;
 import ru.practicum.yandex.user.repository.UserRepository;
 
 import java.util.List;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
-    private final UserMapper mapper;
+
+    private final UserRepository userRepository;
 
     @Override
-    public UserDto getUser(Long userId) {
-        log.info("getUser params: userId = {}", userId);
-        return mapper.toDto(repository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User with id " + userId + " was not found")));
+    @Transactional
+    public UserDto addUser(UserDto newUserDto) throws ConflictException {
+        if (userRepository.existsByName(newUserDto.getName())) {
+            throw new ConflictException(String.format("Пользователь %s уже существует", newUserDto.getName()));
+        }
+        User savedUser = userRepository.save(UserMapper.mapUserDto(newUserDto));
+        return UserMapper.mapUser(savedUser);
     }
 
     @Override
-    public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
-        log.info("getUsers params: ids = {}, from = {}, size = {}", ids, from, size);
-        PageRequest page = PageableBuilder.getPageable(from > 0 ? from / size : 0, size);
+    public UserDto getUserById(Long userId) throws NotFoundException {
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(String.format("Пользователь с id = %d не найден", userId)));
+        return UserMapper.mapUser(user);
+    }
 
-        if (ids == null || ids.isEmpty()) {
-            log.info("getUsers call: findAll");
-            return repository.findAll(page)
-                    .map(mapper::toDto)
-                    .getContent();
-        }
-        log.info("getUsers call: findAllByIdIn");
-        return repository.findAllByIdIn(ids, page)
-                .map(mapper::toDto)
-                .getContent();
+    @Override
+    public List<UserDto> getUsersByIdList(List<Long> ids, Pageable page) {
+        List<User> users = (ids == null || ids.isEmpty()) ?
+                userRepository.findAll(page).getContent() :
+                userRepository.findAllByIdsPageable(ids, page);
+        return users.stream()
+                .map(UserMapper::mapUser)
+                .toList();
     }
 
     @Override
     @Transactional
-    public UserDto registerUser(UserRequestDto userRequestDto) {
-        log.info("registerUser params: userRequestDto = {}", userRequestDto);
-        repository.findByEmail(userRequestDto.getEmail()).ifPresent(user -> {
-            throw new ConflictException("USer with same email already exist");
-        });
-        User user = repository.save(mapper.toEntity(userRequestDto));
-        log.info("registerUser result user = {}", user);
-        return mapper.toDto(user);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long userId) {
-        log.info("delete params: userId = {}", userId);
-        repository.deleteById(userId);
-    }
-
-    @Override
-    public User getOrThrow(Long id) {
-        var user = repository.findById(id);
-        if (user.isEmpty()) {
-            throw new NotFoundException("User not found.");
-        }
-        return user.get();
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

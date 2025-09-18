@@ -1,19 +1,19 @@
 package ru.practicum.yandex.user.service;
 
+import org.springframework.data.domain.Pageable;
+import ru.practicum.yandex.exception.ConflictException;
+import ru.practicum.yandex.exception.NotFoundException;
 import ru.practicum.yandex.user.dto.UserDto;
-import ru.practicum.yandex.user.dto.UserRequestDto;
-import ru.practicum.yandex.user.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto getUser(Long userId);
 
-    List<UserDto> getUsers(List<Long> ids, Integer from, Integer size);
+    UserDto addUser(UserDto newUserDto) throws ConflictException;
 
-    UserDto registerUser(UserRequestDto userRequestDto);
+    UserDto getUserById(Long userId) throws NotFoundException;
 
-    void delete(Long userId);
+    List<UserDto> getUsersByIdList(List<Long> ids, Pageable page);
 
-    User getOrThrow(Long id);
+    void deleteUser(Long userId);
 }

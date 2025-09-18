@@ -1,44 +1,24 @@
 package ru.practicum.yandex.event.service;
 
-import java.time.LocalDateTime;
+import ru.practicum.yandex.event.dto.EventFullDto;
+import ru.practicum.yandex.event.dto.EventShortDto;
+import ru.practicum.yandex.exception.NotFoundException;
+import ru.practicum.yandex.exception.ValidationException;
+
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import ru.practicum.yandex.event.dto.EventFullDto;
-import ru.practicum.yandex.event.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.yandex.event.dto.EventRequestStatusUpdateResult;
-import ru.practicum.yandex.event.dto.EventShortDto;
-import ru.practicum.yandex.event.dto.NewEventDto;
-import ru.practicum.yandex.event.dto.UpdateEventAdminRequest;
-import ru.practicum.yandex.event.dto.UpdateEventUserRequest;
-import ru.practicum.yandex.event.model.Event;
-import ru.practicum.yandex.request.dto.RequestDto;
-
 public interface EventService {
-    List<EventShortDto> getAllByUserId(Long userId, int from, int size);
+    EventFullDto getEventById(Long eventId, String uri, String ip) throws NotFoundException;
 
-    EventFullDto addEvent(Long userId, @Valid NewEventDto newEventDto);
-
-    EventFullDto getEvent(Long userId, Long eventId);
-
-    EventFullDto updateEvent(Long userId, Long eventId, @Valid UpdateEventUserRequest request);
-
-    List<RequestDto> getRequests(Long userId, Long eventId);
-
-    EventRequestStatusUpdateResult updateRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest request);
-
-    List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid,
-                                        LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                        Boolean onlyAvailable, String sort, int from, int size,
-                                        HttpServletRequest request);
-
-    EventFullDto getPublicEvent(Long id, HttpServletRequest request);
-
-    List<EventFullDto> getAllEvents(List<Long> users, List<String> states, List<Long> categories,
-                                    LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
-
-    EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest request);
-
-    Event getOrThrow(Long eventId);
+    List<EventShortDto> getFilteredEvents(String text,
+                                          List<Long> categories,
+                                          Boolean paid,
+                                          String rangeStart,
+                                          String rangeEnd,
+                                          Boolean onlyAvailable,
+                                          String sort,
+                                          Integer from,
+                                          Integer size,
+                                          String uri,
+                                          String ip) throws ValidationException;
 }

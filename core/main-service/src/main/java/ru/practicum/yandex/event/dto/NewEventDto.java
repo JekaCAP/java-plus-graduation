@@ -1,43 +1,39 @@
 package ru.practicum.yandex.event.dto;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.client.util.JsonFormatPattern;
 import ru.practicum.yandex.event.model.Location;
-import ru.practicum.yandex.event.model.constraint.FutureAtLeastTwoHours;
 
-@Data
-@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewEventDto {
+
     @NotBlank
-    @Length(min = 20, max = 2000)
-    private String annotation;
-    @NotNull
-    private Long category;
+    @Size(min = 20, max = 2000)
+    String annotation;
+    Long category;
+    @Size(min = 3, max = 120)
+    String title;
     @NotBlank
-    @Length(min = 20, max = 7000)
-    private String description;
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @FutureAtLeastTwoHours
-    private LocalDateTime eventDate;
-    @NotNull
-    private Location location;
-    private Boolean paid = false;
+    @Size(min = 20)
+    String description;
+    @JsonFormat(pattern = JsonFormatPattern.TIME_PATTERN)
+    String eventDate;
+    Location location;
+    Boolean paid;
     @PositiveOrZero
-    private Integer participantLimit = 0;
-    private Boolean requestModeration = true;
-    @NotBlank
-    @Length(min = 3, max = 120)
-    private String title;
+    Integer participantLimit;
+    Boolean requestModeration;
 }
