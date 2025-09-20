@@ -4,7 +4,7 @@ server:
 
 spring:
   datasource:
-    driverClassName: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:6544/explore-stats
     username: explore-stats
     password: explore-stats
@@ -16,7 +16,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        jdbc.time_zone: UTC
+        jdbc:
+          time_zone: UTC
 
   sql:
     init:

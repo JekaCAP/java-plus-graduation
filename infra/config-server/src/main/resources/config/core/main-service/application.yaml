@@ -3,18 +3,19 @@ server:
 
 spring:
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:6545/explore-main
     username: explore-main
     password: explore-main
-    driver-class-name: org.postgresql.Driver
 
   jpa:
+    database: postgresql
     show-sql: true
-    database: POSTGRESQL
     properties:
       hibernate:
         format_sql: true
-        jdbc.time_zone: UTC
+        jdbc:
+          time_zone: UTC
 
   sql:
     init:
