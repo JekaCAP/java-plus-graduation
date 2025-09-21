@@ -36,7 +36,6 @@ wait_for()
             nc -z $WAITFORIT_HOST $WAITFORIT_PORT
             WAITFORIT_result=$?
         else
-#            (echo -n > /dev/tcp/$WAITFORIT_HOST/$WAITFORIT_PORT) >/dev/null 2>&1
             (curl --fail --silent http://$WAITFORIT_HOST:$WAITFORIT_PORT/actuator/health | grep UP) >/dev/null 2>&1
             WAITFORIT_result=$?
         fi
@@ -52,7 +51,6 @@ wait_for()
 
 wait_for_wrapper()
 {
-    # In order to support SIGINT during timeout: http://unix.stackexchange.com/a/57692
     if [[ $WAITFORIT_QUIET -eq 1 ]]; then
         timeout $WAITFORIT_BUSYTIMEFLAG $WAITFORIT_TIMEOUT $0 --quiet --child --host=$WAITFORIT_HOST --port=$WAITFORIT_PORT --timeout=$WAITFORIT_TIMEOUT &
     else

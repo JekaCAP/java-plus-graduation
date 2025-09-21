@@ -1,0 +1,41 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6545/explore-main
+    username: explore-main
+    password: explore-main
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.time_zone: UTC
+
+  sql:
+    init:
+      mode: always
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+main:
+  banner-mode: off
+  log-startup-info: false
+
+logging:
+  level:
+    org.zalando.logbook: TRACE
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
