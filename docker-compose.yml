@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3.8'
 
 services:
@@ -74,3 +75,19 @@ services:
 networks:
   ewm-network:
     driver: bridge
+=======
+services:
+  stats-server:
+    ports:
+      - "9090:9090"
+
+  stats-db:
+    image: postgres:16.1
+
+  ewm-service:
+    ports:
+      - "8080:8080"
+
+  ewm-db:
+    image: postgres:16.1
+>>>>>>> bebe02589d06e29df6067f4301abed66f83a36e8

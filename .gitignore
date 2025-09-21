@@ -11,9 +11,20 @@ hs_err_pid*
 replay_pid*
 out/
 target/
+<<<<<<< HEAD
 
+=======
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+>>>>>>> bebe02589d06e29df6067f4301abed66f83a36e8
 .idea
 *.iws
 *.iml
 *.ipr
+<<<<<<< HEAD
 *.db
+=======
+>>>>>>> bebe02589d06e29df6067f4301abed66f83a36e8
