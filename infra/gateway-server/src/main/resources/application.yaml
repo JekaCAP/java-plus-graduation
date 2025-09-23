@@ -9,8 +9,6 @@ spring:
         enabled: true
         serviceId: config-server
       fail-fast: true
-server:
-  port: 8080
 eureka:
   client:
     serviceUrl:
