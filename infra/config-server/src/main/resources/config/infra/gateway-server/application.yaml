@@ -1,9 +1,45 @@
+server:
+  port: 8080
+
 spring:
   cloud:
+
+    loadbalancer:
+      configurations: health-check
+      retry:
+        enabled: true
+
     gateway:
-      discovery.locator.enabled: true
+      discovery:
+        locator:
+          enabled: true
       routes:
-        - id: main_service_route
-          uri: lb://main-service
+        - id: user_service_route
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/**
+            - Path=/admin/users/**
+        - id: category_service_route
+          uri: lb://CATEGORY-SERVICE
+          predicates:
+            - Path=/admin/categories/**,/categories/**
+        - id: request_service_route
+          uri: lb://REQUEST-SERVICE
+          predicates:
+            - Path=/users/{user-id}/requests/**,/users/{user-id}/events/{event-id}/requests/**
+        - id: event_service_route
+          uri: lb://EVENT-SERVICE
+          predicates:
+            - Path=/admin/events/**,/events/**,/users/{user-id}/events/**,/admin/compilations/**,/compilations/**
+        - id: comment_service_route
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/admin/comments/**,/users/{user-id}/comments/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true

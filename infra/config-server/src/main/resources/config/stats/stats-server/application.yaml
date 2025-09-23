@@ -3,26 +3,26 @@ server:
   uri: "http://localhost:${server.port}"
 
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6544/explore-stats
-    username: explore-stats
-    password: explore-stats
 
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-        jdbc:
-          time_zone: UTC
+        jdbc.time_zone: UTC
 
   sql:
     init:
       mode: always
 
-main:
-  banner-mode: off
-  log-startup-info: false
+  main:
+    banner-mode: off
+    log-startup-info: false
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ewm_stats_db
+    username: postgres
+    password: postgres
