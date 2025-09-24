@@ -1,6 +1,5 @@
 package ru.practicum.dto.event;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -13,8 +12,6 @@ import ru.practicum.dto.user.UserDto;
 import ru.practicum.util.JsonFormatPattern;
 
 import java.time.LocalDateTime;
-
-
 
 @Data
 @Builder
@@ -30,9 +27,9 @@ public class EventShortDto {
     UserDto initiator;
 
     @NotNull
-    @JsonFormat(pattern =  JsonFormatPattern.TIME_PATTERN)
+    @JsonFormat(pattern = JsonFormatPattern.TIME_PATTERN)
     LocalDateTime eventDate;
 
     Boolean paid;
-    Integer views;
+    Double rating;
 }
