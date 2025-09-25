@@ -39,18 +39,11 @@ public class EventFullDto {
     String description;
 
     Integer participantLimit;
-
     EventState state;
-
     String createdOn;
-
     LocationDto location;
-
     Boolean requestModeration;
-
     Long confirmedRequests;
-
     String publishedOn;
-
-    Integer views;
+    Double rating;
 }
